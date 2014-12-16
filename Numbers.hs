@@ -2,7 +2,7 @@ module Numbers where
 
 import Definitions
 
-integer_euclid=Euclid {
+𝕫=Euclid {
  _zero=0::Integer,
  _one =1::Integer,
  (.+)=(+),
