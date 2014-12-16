@@ -5,7 +5,7 @@ import Definitions
 import Control.Exception
 
 mod::Eq d=>Structure d->d->Structure d
-mod euclid m=Field{
+mod euclid m=Field{ --comprobar antes de lanzar esto si m es primo en euclid
   _zero=zero,
   _one=one,
   (.+)= \a b-> snd $ division (a+b) m,
