@@ -1,6 +1,7 @@
 module Definitions where
 
 import Prelude hiding (id)
+import qualified Prelude as P
 
 -- Algunas estructuras algebraicas comunes:
 

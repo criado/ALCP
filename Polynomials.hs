@@ -22,14 +22,16 @@ import Definitions
 pol::Structure d->Structure [d]
 pol field = Euclid {
     _one=[one], _zero=[],
-    (.+)=\   p1 p2->(reduction.reverse) $ zipWith (+) (reverse p1) (reverse p2) 
-    (.-)= \  p1 p2->p1 .+ (map (-) p2)
-    (.*) = \ p1 p2->foldr (map 
-    (.==) = \p1 p2->and zipWith (==) (reduction p1) (reduction p2)
-    _deg = toInteger.length.reduction
-    _division=
+    (.+)=\   p q->(reduction.reverse) $ zipWith (+) (reverse p) (reverse q),
+    (.-)= \  p q->p .+ (map (-) q),
+    (.*) = \ p q->[foldr (+) zero [(p!!i)*(q!!j)| i<-[0..l1], j=[0..l2],k P.==i P.+j] | k<-[0..ll P.+l2]]
+    (.==) = \p q->and zipWith (==) (reduction p) (reduction q),
+    _deg = toInteger.length.reduction,
+    _division=\p q->let q'=reduction q; (c,r)=divMonic p (q'*[1/(q'!!0)]) in (reduction c*[q'!!0]),reduction r)
+      where
   } where Field one zero (+) (-) (*) (==) (/) = field 
           reduction p=dropWhile(zero==)
+          l1=length p1; l2=length p2
 {-
 
 instance Field f => Group (Pol f) where
