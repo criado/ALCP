@@ -19,15 +19,18 @@ import Definitions
  - funciones externas.
  -}
 
-newtype Pol f = Pol [f] deriving Show
-reduction :: Ring f => Pol f -> Pol f
-reduction (Pol a_i) = Pol $ dropWhile (zero==) a_i
-
-coefs (Pol a_i)=a_i
-pol a_i = reduction $ Pol a_i
-
-instance Ring r=> Eq (Pol r) where
- a == b = coefs(reduction a) == coefs(reduction b)
+pol::Structure d->Structure [d]
+pol field = Euclid {
+    _one=[one], _zero=[],
+    (.+)=\   p1 p2->(reduction.reverse) $ zipWith (+) (reverse p1) (reverse p2) 
+    (.-)= \  p1 p2->p1 .+ (map (-) p2)
+    (.*) = \ p1 p2->foldr (map 
+    (.==) = \p1 p2->and zipWith (==) (reduction p1) (reduction p2)
+    _deg = toInteger.length.reduction
+    _division=
+  } where Field one zero (+) (-) (*) (==) (/) = field 
+          reduction p=dropWhile(zero==)
+{-
 
 instance Field f => Group (Pol f) where
  Pol []        *: p2 = Pol []
@@ -56,3 +59,4 @@ instance Field f => Euclidean (Pol f) where
    where (q,r) = divmonic a' b
          a'    = a -: Pol(b_i++zero:zeroes) *: Pol[a_0]
          zeroes=replicate (fromInteger$if a'==zero then 0 else deg a - deg a' -1) zero
+-}

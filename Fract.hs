@@ -9,5 +9,6 @@ fract'field field=Field{
   (.+)= \(a,b) (c,d)->(a*d+c*b,b*d),
   (.-)= \(a,b) (c,d)->(a*d-c*b,b*d),
   (.*)= \(a,b) (c,d)->(a*b,c*d),
+  (.==)=\(a,b) (c,d)->(a*d)==(b*c),
   (./)= \(a,b) (c,d)->(a*d,b*c)
  } where one=_one field; zero=_zero field; (+)=(.+) field; (-)=(.-)field; (*)=(.*)field
