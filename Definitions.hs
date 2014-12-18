@@ -29,3 +29,8 @@ eea euclid a b
 gcd :: Structure d-> d->d->d 
 gcd euclid a b = d where (d,_,_)=eea euclid a b
 
+pow :: Structure d->Integer->d->d
+pow ring exp base=
+  if exp==0 then one else a*a*(if (exp `div` 2==1) then a else one)
+  where (*)=(.*) ring; one=_one ring
+        a=pow ring (exp `div` 2) base
