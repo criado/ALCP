@@ -8,7 +8,9 @@ pol::Structure d->Structure [d]
 pol field = Euclid _zero _one (.==) (.+) (.-) (.*) _deg _division where
   _one=[one]; _zero=[]
   p.==q         = and $ zipWith (==) (reduction p) (reduction q)
-  p.+q          = (reduction.reverse) $ zipWith (+) (reverse p) (reverse q)
+  p.+q          = let l=fromInteger $ _deg p P.- _deg q 
+                      pad a=(++) $ replicate a zero
+                  in zipWith (+) (pad (0 P.- l) p) (pad l q)
   p.-q          = p .+ map (zero-) q
   p.*q          = if q.==_zero then [] else map (*head q) p .+ (p.*tail q)
   _deg          = toInteger.length.reduction
