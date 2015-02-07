@@ -1,3 +1,3 @@
-import Prelude hiding ((!!),length,replicate,mod,(+),(-),(*),(/),div)
+import Prelude hiding ((!!),gcd,length,replicate,mod,(+),(-),(*),(/),div)
 import qualified Prelude as P
 

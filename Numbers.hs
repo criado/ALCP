@@ -1,5 +1,6 @@
 module Numbers where
 
+#include "Header.hs"
 import Definitions
 import Prelude hiding((+),(-),(*),(/),div,mod)
 import qualified Prelude as P
@@ -12,7 +13,7 @@ import qualified Prelude as P
  (.-)=(P.-),
  (.*)=(P.*),
  _deg= P.id,
- _division= \a b->(P.div a b, P.mod a b)
+ _div= \a b->(P.div a b, P.mod a b)
 }
 
 integer=𝕫
