@@ -1,7 +1,6 @@
 module Gauss where
 
 #include "Header.hs"
-import Debug.Trace
 
 type Gauss=(Integer,Integer)
 
