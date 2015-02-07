@@ -1,8 +1,19 @@
+--{-#LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances#-}
 module Definitions where
 
-import Prelude hiding (mod,(+),(-),(*),(/),div)
+#include "Header.hs"
 import qualified Prelude as P
 import Data.List
+--infix 0 ^-^ 
+
+length::[a]->Integer
+length=toInteger. P.length
+
+replicate::Integer->a->[a]
+replicate a= P.replicate (fromInteger a)
+
+(!!)::[a]->Integer->a
+a!!b=a P.!! fromInteger b
 
 -- Cálculo de primos de www.haskell.org/haskellwiki/Prime_Numbers#Tree_merging
 -- Ridículamente rápido en la práctica, O(n^1.2)
@@ -17,26 +28,11 @@ primes  = 2 : ([3,5..] `minus` foldt [[p P.*p,p P.*p P.+2 P.*p..] | p<-primes_])
                            LT->head x :minus (tail x) y
                            EQ->        minus (tail x) (tail y)
                            GT->        minus x        (tail y)
-    union x y|x==[] =y
-             |y==[] =x
+    union x y|x==[] =y |y==[] =x
              |otherwise = case compare (head x) (head y) of
                             LT-> head x : union (tail x) y
                             EQ-> head x : union (tail x) (tail y)
                             GT-> head y : union x        (tail y)
-
---data Dictionary d=ℤ|Pol (Descritptor d)|(Descriptor d) :/d|Fract (Descriptor d)
-
-zero::Dictionary d-> d                                          ; zero=_zero
-one::Dictionary d-> d                                           ; one=_one
-(+)::(Dictionary d->d)->(Dictionary d->d)->Dictionary d->d      ; (a+b) des=(.+) des (a des) (b des)
-(-)::(Dictionary d->d)->(Dictionary d->d)->Dictionary d->d      ; (a-b) des=(.-) des (a des) (b des)
-(*)::(Dictionary d->d)->(Dictionary d->d)->Dictionary d->d      ; (a*b) des=(.*) des (a des) (b des)
-(/)::(Dictionary d->d)->(Dictionary d->d)->Dictionary d->d      ; (a/b) des=(./) des (a des) (b des)
-deg::(Dictionary d->d)->Dictionary d->Integer                   ; deg a des=_deg des (a des)
-div::(Dictionary d->d)->(Dictionary d->d)->Dictionary d->(d,d)  ; div a b des=_division des(a des)(b des)
-fact::(Dictionary d->d)->Dictionary d-> (d,[(d,Integer)])       ; fact a des=_factor des (a des)
-literal::d->Dictionary d->d                                     ; literal a des=a
-getOps::Dictionary d->Dictionary d                              ; getOps=id
 
 -- Algunas estructuras algebraicas comunes:
 data Dictionary t=
@@ -67,10 +63,37 @@ gcd euclid a b = d where (d,_,_)=eea euclid a b
 
 pow :: Dictionary d->Integer->d->d
 pow ring exp base=
-  if exp==0 then one else a*a*(if exp `P.mod` 2==1 then base else one)
+  if exp==0 then one else a*a*(if exp `P.mod` 2 P.==1 then base else one)
   where (*)=(.*) ring; one=_one ring
         a=pow ring (exp `P.div` 2) base
+
+mul :: Dictionary d->Integer->d->d
+mul ring fact base=
+  if fact==0 then zero else a+a+(if fact `P.mod` 2 P.==1 then base else zero)
+  where (+)=(.+) ring; zero=_zero ring
+        a=mul ring (fact `P.div` 2) base
 
 order :: Dictionary  t->t->Maybe Integer
 order ring elem=fmap (\i->1 P.+ toInteger i) $ findIndex (==one) $ take 1000 $  iterate (*elem) elem
   where (*)=(.*)ring; one=_one ring; (==)=(.==)ring
+
+{-
+class Arrobable e t | e->t where
+  (^-^)::Dictionary t->e->t
+
+instance Arrobable a a where
+  dict^-^exp=exp
+instance Arrobable (Dictionary d->d) d  where 
+  dict^-^exp=exp dict
+
+zero::Dictionary d-> d                                          ; zero=_zero
+one::Dictionary d-> d                                           ; one=_one
+(+)::Arrobable e d=>e->e->Dictionary d->d      ; (a+b) dic=(.+) dic (dic^-^a) (dic^-^b)
+(-)::(Dictionary d->d)->(Dictionary d->d)->Dictionary d->d      ; (a-b) des=(.-) des (a des) (b des)
+(*)::(Dictionary d->d)->(Dictionary d->d)->Dictionary d->d      ; (a*b) des=(.*) des (a des) (b des)
+(/)::(Dictionary d->d)->(Dictionary d->d)->Dictionary d->d      ; (a/b) des=(./) des (a des) (b des)
+deg::(Dictionary d->d)->Dictionary d->Integer                   ; deg a des=_deg des (a des)
+div::(Dictionary d->d)->(Dictionary d->d)->Dictionary d->(d,d)  ; div a b des=_division des(a des)(b des)
+fact::(Dictionary d->d)->Dictionary d-> (d,[(d,Integer)])       ; fact a des=_factor des (a des)
+literal::d->Dictionary d->d                                     ; literal a des=a
+-}

@@ -1,18 +1,18 @@
 module Numbers where
 
 import Definitions
-
-pepito=2
+import Prelude hiding((+),(-),(*),(/),div,mod)
+import qualified Prelude as P
 
 𝕫=Euclid {
  _zero=0::Integer,
  _one =1::Integer,
- (.==)=(==),
- (.+)=(+),
- (.-)=(-),
- (.*)=(*),
- _deg= id,
- _division= \a b->(div a b, mod a b)
+ (.==)=(P.==),
+ (.+)=(P.+),
+ (.-)=(P.-),
+ (.*)=(P.*),
+ _deg= P.id,
+ _division= \a b->(P.div a b, P.mod a b)
 }
 
 integer=𝕫
