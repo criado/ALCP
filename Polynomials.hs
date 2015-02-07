@@ -1,7 +1,6 @@
 module Polynomials where
 
 #include "Header.hs"
-import Definitions
 
 pol::Dictionary d->Dictionary [d]
 pol field = Euclid _zero _one (.==) (.+) (.-) (.*) _deg _div where

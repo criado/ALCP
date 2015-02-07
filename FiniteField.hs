@@ -1,6 +1,6 @@
 module FiniteField where
 
-import Definitions
+#include "Header.hs"
 import Quotient
 import Polynomial
 import Numbers

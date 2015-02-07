@@ -1,7 +1,6 @@
 module Fract where 
 
 #include "Header.hs"
-import Definitions
 import Numbers
 
 fract::Dictionary d->Dictionary (d,d)

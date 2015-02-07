@@ -1,10 +1,10 @@
---{-#LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances#-}
 module Definitions where
 
-#include "Header.hs"
-import qualified Prelude as P
-import Data.List
 --infix 0 ^-^ 
+import Prelude hiding ((!!),gcd,length,replicate,mod,(+),(-),(*),(/),div)
+import qualified Prelude   as P
+import qualified Data.List as L
+import Debug.Trace
 
 length::[a]->Integer
 length=toInteger. P.length
@@ -74,7 +74,7 @@ mul ring fac base=
         a=mul ring (fac `P.div` 2) base
 
 order :: Dictionary  t->t->Maybe Integer
-order ring elem=fmap(\i->1 P.+ toInteger i)$ findIndex(==one) $ take 1000 $iterate(*elem)elem
+order ring elem=fmap(\i->1 P.+ toInteger i)$ L.findIndex(==one) $ take 1000 $iterate(*elem)elem
   where (*)=(.*)ring; one=_one ring; (==)=(.==)ring
 
 {-
