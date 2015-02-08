@@ -1,9 +1,6 @@
 module Numbers where
 
 #include "Header.hs"
-import Definitions
-import Prelude hiding((+),(-),(*),(/),div,mod)
-import qualified Prelude as P
 
 𝕫=Euclid {
  _zero=0::Integer,
@@ -12,6 +9,7 @@ import qualified Prelude as P
  (.+)=(P.+),
  (.-)=(P.-),
  (.*)=(P.*),
+ (./)= \n m->assert(m P.==1||m P.== -1) n P.*m,
  _deg= P.id,
  _div= \a b->(P.div a b, P.mod a b)
 }

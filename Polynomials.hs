@@ -1,21 +1,21 @@
 module Polynomials where
-
 #include "Header.hs"
 
 pol::Dictionary d->Dictionary [d]
-pol field = Euclid _zero _one (.==) (.+) (.-) (.*) _deg _div where
+pol field = Euclid _zero _one (.==)(.+)(.-)(.*)(./) _deg _div where
   Field zero one (==) (+) (-) (*) (/) = field 
 
   _one=[one]; _zero=[]
-  p.==q    = let l=length p P.- length q
-             in  and $ zipWith (==) (pad(0 P.-l)++p) (pad l++q)
-  p.+q     = let l=length p P.- length q 
-             in reduction$zipWith (+) (pad(0 P.-l)++p) (pad l++q)
-  p.-q     = p .+ map (zero-) q
-  p.*q     = reduction$ if q.==_zero 
-                        then [] 
-                        else (map (*head q) p++pad (length $tail q)) .+ (p.*tail q)
-  _deg     = length.reduction
+  p.==q  = let l=length p P.- length q
+           in  and $ zipWith (==) (pad(0 P.-l)++p) (pad l++q)
+  p.+q   = let l=length p P.- length q 
+           in reduction$zipWith (+) (pad(0 P.-l)++p) (pad l++q)
+  p.-q   = p .+ map (zero-) q
+  p.*q   = if q.==_zero then [] else reduction$
+              (map (*head q) p++pad (length q P.-1)) .+ (p.*tail q)
+  p./q   = assert (_deg q P.==1)$ p .* [one/head q]
+
+  _deg p = length(reduction p)
   _div p q
     |q.==_zero = error "división por cero"
     |otherwise=(reduction (c.*[one/head q']),reduction r)
@@ -33,9 +33,11 @@ pol field = Euclid _zero _one (.==) (.+) (.-) (.*) _deg _div where
 
 derivate::Dictionary d->[d]->[d]
 derivate ring p=let l=length p
-                in [mul ring (l P.-i) (p!!(l P.-i)) 
+                in [mul ring (p!!(l P.-i)) (l P.-i)
                     |i<-[l P.-1,l P.-2.. 0] ]
-{-
+
+
+{-¿¿??
 cyclotomic::Dictionary d->[d]
 cyclotomic field =
   [foldr (\a b->fst $ _division (pol field) b a) (start n) (dividers n)| n<-[1..]]

@@ -8,9 +8,10 @@
 [✓] inverso de un elemento en un cuerpo finito.
   	  p,f irreducibles en Zp[x] -> K:=Zp[x] / (f(x)) |K|=p^(deg f)
 [ ] test de irreducibilidad de un primo en Fq[x]
-[ ] logaritmo discreto en cuerpos Fq[x]/(f(x))
+[ ] logaritmo discreto en cuerpos Fq. Algoritmo ρ-Pollard.
 [ ] polinomio minimo de alpha+beta, alpha*beta, ... cuando Q(alpha), Q(beta) son extensiones de Q
 [ ] algoritmo de factorizaci�n de un polinomio en cuerpo finito parte 1, 2 y 3.
 [ ] algoritmo de factorizacion de Berlekamp.
 [ ] algoritmo de Hensel.
 [ ] AKS
+[ ] Miller-Rabin (factorización probabilista en el chuletario)

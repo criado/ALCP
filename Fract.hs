@@ -12,7 +12,7 @@ fract euclid=Field{
   (.*) = \(a,b) (c,d)->reduce (a*c,b*d),
   (.==)= \(a,b) (c,d)->       (a*d)==(b*c),
   (./) = \(a,b) (c,d)->reduce (a*d,b*c)
- } where Euclid zero one (==) (+) (-) (*) deg div =euclid
+ } where Euclid zero one (==)(+)(-)(*)(/) deg div =euclid
          reduce (a,b)=(fst$ a`div`d, fst$ b`div`d)
                       where d=gcd euclid a b
 

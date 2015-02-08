@@ -5,5 +5,6 @@ import Numbers
 import Quotient
 import Fract
 import Gauss
+import FiniteField
 --import AKS
 
