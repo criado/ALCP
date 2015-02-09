@@ -33,9 +33,18 @@ fact1 p n f=
 
 fact2::Integer->Integer->[[Integer]]->[[[Integer]]]
 fact2 p n f=
-  error "aj" --(replicate g i:fact2 p n (fst `div` g))
-  where Euclid zero one (==)(+)(-)(*)(/) deg div= pol $ finite p n
--- where h n_i=pow (pol field`mod`f) x (pow integer p (n_i P.* n) ) - x
+  aux f (pow (pol field) x q)
+  where Euclid zero one (==)(+)(-)(*)(/) deg div= pol field
+        field= finite p n
+        q= pow integer p n
+        x= [_one field, _zero field]
+        aux::[[Integer]]->[[Integer]]->[[[Integer]]]
+        aux f xq | deg f P.==1= []
+                 | g/=one     = g:aux f' xq'
+                 | otherwise= aux f xq'
+                 where g  = gcd (pol field) f (xq-x)
+                       xq'= pow (pol field) xq q
+                       f' = fst $ f `div` g
 
 fact3::Integer->Integer->[[Integer]]->[[[Integer]]]
 fact3 p n f= error "ash"

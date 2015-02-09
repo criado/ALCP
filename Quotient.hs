@@ -37,5 +37,5 @@ chineseInteger=chinese integer.chineseFilter.chineseSplit where
   chineseFilter::[[(Integer,Integer)]]->[(Integer,Integer)]
   chineseFilter l= map filterPrime l where
     filterPrime l=
-      assert(all (\(x',y')->snd(_div integer x y')P.==x') l) (x,y)
+      assert(all (\(x',y')->snd(_div integer x y')==x') l) (x,y)
       where (x,y)=last l

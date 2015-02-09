@@ -35,8 +35,8 @@ monic field p = map (\u->(./)field u (head p)) p
 
 derivate::Dictionary d->[d]->[d]
 derivate ring p=
-  let l= length p P.-1
-  in [mul ring (p!!(l P.-i)) (l P.-i) |i<-[l P.-1,l P.-2.. 0] ]
+  let l= length p-1
+  in [mul ring (p!!(l-i)) (l-i) |i<-[l-1,l-2.. 0] ]
 
 
 {-¿¿??

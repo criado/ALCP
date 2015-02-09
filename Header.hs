@@ -1,4 +1,4 @@
-import Prelude hiding ((!!),gcd,length,replicate,mod,(+),(-),(*),(/),div)
+import Prelude hiding ((!!),gcd,length,replicate,mod)
 import qualified Prelude as P
 import Definitions
 import Utilities
@@ -12,3 +12,5 @@ import Data.Maybe
 import Data.Char as DC
 import Debug.Trace
 import GHC.Exts as Ext
+import System.Random
+import System.IO.Unsafe

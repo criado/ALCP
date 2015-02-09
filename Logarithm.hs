@@ -33,8 +33,6 @@ logarithmEq field seed α β=
         loop= fromJust. L.find (\((x,_,_),(y,_,_))-> x==y).tail
 
 hash seed x=
-  hashaux (show x)
-  where
-    hashaux l=pow (integer`mod`541) (toInteger$ seed P.+1) (tonum l) 
-    tonum []=0
-    tonum (c:cs)= tonum cs P.* 256 P.+ toInteger(ord c)
+  pow (integer`mod`541) (toInteger$ seed+1) (tonum $show x) 
+  where tonum []=0
+        tonum (c:cs)= tonum cs * 256 + toInteger(ord c)
