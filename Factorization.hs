@@ -33,7 +33,7 @@ fact1 p n f=
 
 fact2::Integer->Integer->[[Integer]]->[[[Integer]]]
 fact2 p n f=
-  (replicate g i:fact2 p n (fst `div` g))
+  error "aj" --(replicate g i:fact2 p n (fst `div` g))
   where Euclid zero one (==)(+)(-)(*)(/) deg div= pol $ finite p n
 -- where h n_i=pow (pol field`mod`f) x (pow integer p (n_i P.* n) ) - x
 

@@ -1,6 +1,9 @@
 module AKS where
 
-import Definitions hiding (*)
 import Prelude --En este módulo usamos las cosas del sistema
+
+aks::Integer->Bool
+aks n=
+  ispow n && 
 
 

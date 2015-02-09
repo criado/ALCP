@@ -14,4 +14,6 @@
 [ ] algoritmo de factorizacion de Berlekamp.
 [ ] algoritmo de Hensel.
 [ ] AKS
-[ ] Miller-Rabin (factorización probabilista en el chuletario)
+[ ] Miller-Rabin (test de primalidad probabilista en el chuletario)
+
+Obs: cada fichero tendrá que caber en 43 filas por 70 columnas
