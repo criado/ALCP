@@ -27,8 +27,9 @@ chinese euclid= foldr1 chinese2
         Euclid zero one (==)(+)(-)(*)(/) deg div=euclid
         reduce (a,b)=(snd$ a `div`b,b)
 
--- para euclid=integer, tengo uno a prueba de no-primos
+-- para euclid=integer, tengo uno a prueba de no-primos.
 chineseInteger=chinese integer.chineseFilter.chineseSplit where 
+
   chineseSplit::[(Integer,Integer)]->[[(Integer,Integer)]]
   chineseSplit l= Ext.groupWith (fst.head.factor.snd)$ L.sort $ l>>=
     (\(x,y)->[(snd$_div integer x $ pow integer b e,pow integer b e)

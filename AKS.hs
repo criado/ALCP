@@ -7,10 +7,11 @@ aks n=
   all (\a-> not $ inRange (2,n P.-1) (gcd integer a n) ) [1..r] &&
   (if n<=r then True else 
       all condition [1..floor(sqrt(φ(r))*logBase 2 (n))] )
-  where ispow n=
-        r= find  
+  where ispow n= 
+        r= find 
         φ= product . map(\(p,n)->(p-1)*(p^(n-1))) . factor
-        condition a= 
-          where 
-        
-
+        condition a=
+          not $ pow euclid (x+[a]) n ==
+                pow euclid x n + [a] 
+          where x=[1,0]
+                euclid=pol(integer `mod`n)
