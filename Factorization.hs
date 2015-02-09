@@ -1,36 +1,42 @@
-module FiniteField  where
+module Factorization where
 #include "Header.hs"
 import Quotient
 import Polynomials
 import Numbers
+import FiniteField
 
-finite p n=assert (LO.member p primes) $
-            pol(𝕫 `mod` p)`mod`(head$filter(irred p)
-             $enumPol p n)
-
-enumList p 1=[[c]|c<-[0..p P.-1]]
-enumList p n=[c:q|c<-[0..p P.-1],q<-enumList p (n P.-1)]
-
-enumPol::Integer->Integer->[[Integer]]
-enumPol p n=[1:q|q<-enumList p n]
-
---Test de irreducibilidad en Zq, p primo
-irred::Integer->[Integer]->Bool
-irred p f=
-  zero == h n && 
+--Test de irreducibilidad (Rabin) en 𝔽q, q=p^m, p primo
+irred::Integer->Integer->[[Integer]]->Bool
+irred p n f=
+  zero == h d && 
    all (\n_i-> one == gcd (pol field) f (h n_i) ) primedivs
   where 
-    n=_deg (pol field) f P.- 1 
-    field@(Field _zero _one (.==)(.+)(.-)(.*)(./))=integer `mod` p
+    d=_deg (pol field) f P.- 1 
+    field@(Field _zero _one (.==)(.+)(.-)(.*)(./))=finite p n
     Field zero one (==)(+)(-)(*)(/) =pol field`mod`f
-    h n_i=pow (pol field`mod`f) x (pow integer p n_i) - x
+    h n_i=pow (pol field`mod`f) x (pow integer p (n_i P.* n) ) - x
     x=[_one,_zero] --polinomio x
-    primedivs=[n `P.div` p_i| p_i<-(fst.unzip.factor) n]
+    primedivs=[d `P.div` p_i| p_i<-(fst.unzip.factor) d]
 
---TODO pretty-print de la tabla de multiplicar
-printtable p n=
-  let Field zero one (==)(+)(-)(*)(/)=finite p n
-      trad a=if null a then 0
-                       else (p P.* (trad$tail a)) P.+ head a 
-  in [map (trad.reverse)
-       [(a*b)/b|a<-tail$enumList p n]|b<-tail$enumList p n]
+factorPol::Integer->Integer->[[Integer]]->[[[Integer]]]
+factorPol p n f=
+  join $ map(fact3 p n) $ 
+  join $ map(fact2 p n.monic (finite p n)) $
+  fact1 p n f
+
+fact1::Integer->Integer->[[Integer]]->[[[Integer]]]
+fact1 p n f=
+  if deg f P.<3 then [f]
+                else f2:fact1 p n g
+  where f'= derivate (finite p n) f
+        g = gcd fqx f f'
+        f2= fst $ _div fqx f g
+        fqx@(Euclid zero one (==)(+)(-)(*)(/)deg div)=pol(finite p n)
+
+fact2::Integer->Integer->[[Integer]]->[[[Integer]]]
+fact2 p n f= error "aj"
+  
+--  where h n_i=pow (pol field`mod`f) x (pow integer p (n_i P.* n) ) - x
+
+fact3::Integer->Integer->[[Integer]]->[[[Integer]]]
+fact3 p n f=error "ash"

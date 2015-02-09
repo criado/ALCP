@@ -6,5 +6,7 @@ import Quotient
 import Fract
 import Gauss
 import FiniteField
+import Factorization
+import Logarithm
 --import AKS
 

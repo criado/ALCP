@@ -9,8 +9,12 @@ mod euclid m=Field{
     (.+) = \a b-> snd $ div (a+b) m,
     (.-) = \a b-> snd $ div (a-b) m,
     (.*) = \a b-> snd $ div (a*b) m,
-    (./) = \a b-> let (d,s,t)=eea euclid b m 
-                  in reduce$ assert (deg d P.==1) (a*s/d)
+    (./) = \a b-> let g=gcd euclid a $ gcd euclid b m
+                      a'=fst $ div a g
+                      b'=fst $ div b g
+                      m'=fst $ div m g
+                      (d',s',t')=eea euclid b' m'  
+                  in reduce $ assert (deg d' P.== 1) (a'*s'/d')
   } where Euclid zero one (==)(+)(-)(*)(/) deg div=euclid
           reduce a=snd$div a m
 

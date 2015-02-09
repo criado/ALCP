@@ -1,36 +1,36 @@
-module FiniteField  where
+module Logarithm  where
 #include "Header.hs"
 import Quotient
 import Polynomials
 import Numbers
+import FiniteField
 
-finite p n=assert (LO.member p primes) $
-            pol(𝕫 `mod` p)`mod`(head$filter(irred p)
-             $enumPol p n)
+--La idea es sencilla: 
+-- α^γ=β siendo α un generador de G, cíclico de orden n.
+-- bγ=a mod n. Entonces defines f:G->G "aleatoria"
+-- Se trata de buscar un ciclo, como guardabas los exponentes,
+-- reahaces el resultado. No da una respuesta, si no una congruencia.
+-- http://www.dtc.umn.edu/~odlyzko/doc/discrete.logs.hff.pdf
+logarithm::Show d=>Dictionary d->Int->d->d->(Integer,Integer)
+logarithm field seed α β=
+  end $ loop $ zip (iterate f (one,0,0)) (iterate (f.f) (one,0,0)) 
+   
+  where f (x,a,b)
+          |opt P.==0 = (α*x, 1 P.+a,       b)
+          |opt P.==1 = (x*x, 2 P.*a, 2 P.* b) 
+          |opt P.==2 = (β*x,      a, 1 P.+ b)
+          where opt= (sum (map ord(show x)) `P.div` seed)`P.mod` 3
+          
+        Field zero one (==)(+)(-)(*)(/)=field
+        n= fromJust $ order field α
 
-enumList p 1=[[c]|c<-[0..p P.-1]]
-enumList p n=[c:q|c<-[0..p P.-1],q<-enumList p (n P.-1)]
-
-enumPol::Integer->Integer->[[Integer]]
-enumPol p n=[1:q|q<-enumList p n]
-
---Test de irreducibilidad en Zq, p primo
-irred::Integer->[Integer]->Bool
-irred p f=
-  zero == h n && 
-   all (\n_i-> one == gcd (pol field) f (h n_i) ) primedivs
-  where 
-    n=_deg (pol field) f P.- 1 
-    field@(Field _zero _one (.==)(.+)(.-)(.*)(./))=integer `mod` p
-    Field zero one (==)(+)(-)(*)(/) =pol field`mod`f
-    h n_i=pow (pol field`mod`f) x (pow integer p n_i) - x
-    x=[_one,_zero] --polinomio x
-    primedivs=[n `P.div` p_i| p_i<-(fst.unzip.factor) n]
-
---TODO pretty-print de la tabla de multiplicar
-printtable p n=
-  let Field zero one (==)(+)(-)(*)(/)=finite p n
-      trad a=if null a then 0
-                       else (p P.* (trad$tail a)) P.+ head a 
-  in [map (trad.reverse)
-       [(a*b)/b|a<-tail$enumList p n]|b<-tail$enumList p n]
+        end ((_,a,b),(_,a',b'))= 
+          assert (b'' /=zero)
+           ((./) (integer`mod`n') a'' b'' ,n')
+          where n' = fst $ n    `div` g
+                a''= fst $ a'-a `div` g
+                b''= fst $ b-b' `div` g
+                g=gcd integer (a'-a) $ gcd integer (b-b') n
+                Euclid zero one (==)(+)(-)(*)(/) deg div=integer
+                                 
+        loop= fromJust. L.find (\((x,_,_),(y,_,_))-> x==y).tail

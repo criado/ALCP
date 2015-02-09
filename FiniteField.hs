@@ -1,4 +1,4 @@
-module FiniteField  where
+module FiniteField where
 #include "Header.hs"
 import Quotient
 import Polynomials

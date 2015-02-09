@@ -8,3 +8,6 @@ import qualified Data.List as L
 import Data.Function
 import Data.List.Ordered as LO
 import Control.Exception
+import Data.Maybe
+import Data.Char as DC
+import Debug.Trace

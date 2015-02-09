@@ -21,9 +21,9 @@ pol field = Euclid _zero _one (.==)(.+)(.-)(.*)(./) _deg _div where
     |otherwise=(reduction (c.*[one/head q']),reduction r)
     where q'=reduction q
           (c,r)=divmonic p (q'.*[one/head q'])
-
+  
+  reduction = dropWhile (==zero)
   pad a=replicate a zero
-  reduction = dropWhile (zero==)
   divmonic p q
     |q.==_zero     = error "division por cero" 
     |_deg p<_deg q = (_zero,p)
@@ -31,10 +31,12 @@ pol field = Euclid _zero _one (.==)(.+)(.-)(.*)(./) _deg _div where
     where (c,r)    = divmonic (p.-(map (*head p) q++pad)) q 
           pad      = replicate (_deg p P.- _deg q) zero
 
+monic field p = map (\u->(./)field u (head p)) p
+
 derivate::Dictionary d->[d]->[d]
-derivate ring p=let l=length p
-                in [mul ring (p!!(l P.-i)) (l P.-i)
-                    |i<-[l P.-1,l P.-2.. 0] ]
+derivate ring p=
+  let l= length p P.-1
+  in [mul ring (p!!(l P.-i)) (l P.-i) |i<-[l P.-1,l P.-2.. 0] ]
 
 
 {-¿¿??

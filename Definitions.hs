@@ -1,6 +1,5 @@
 module Definitions where
-
---infix 0 ^-^ 
+--infix 0 ^-^  --aquí no cabe nada más
 import Prelude hiding(gcd,mod,(+),(-),(*),(/),div)
 import qualified Prelude   as P
 import qualified Data.List as L
@@ -29,17 +28,18 @@ gcd :: Dictionary d-> d->d->d
 gcd euclid a b = d where (d,_,_)=eea euclid a b
 
 pow :: Dictionary d->d->Integer->d
-pow ring base exp=
-  if exp==0 then one  else a*a*(if exp `P.mod` 2 P.==1 then base else one )
+pow ring a b=
+  if b==0 then one  else α*α*(if b`P.mod`2 == 1 then a else one )
   where (*)=(.*) ring; one=_one ring
-        a=pow ring base (exp `P.div` 2)
+        α=pow ring a (b`P.div`2)
 
 mul :: Dictionary d->d->Integer->d
-mul ring base fac=
-  if fac==0 then zero else a+a+(if fac `P.mod` 2 P.==1 then base else zero)
+mul ring a b=
+  if b==0 then zero else α+α+(if b`P.mod`2 == 1 then a else zero)
   where (+)=(.+) ring; zero=_zero ring
-        a=mul ring base (fac `P.div` 2)
+        α=mul ring a (b`P.div`2)
 
 order :: Dictionary  t->t->Maybe Integer
-order ring elem=fmap(\i->1 P.+ toInteger i)$ L.findIndex(==one) $ take 1000 $iterate(*elem)elem
+order ring elem=fmap(\i->1 P.+ toInteger i)$ L.findIndex(==one) $
+                 take 1000 $iterate(*elem)elem
   where (*)=(.*)ring; one=_one ring; (==)=(.==)ring
