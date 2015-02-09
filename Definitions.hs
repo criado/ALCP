@@ -24,8 +24,8 @@ eea euclid a b
                 in  (d,t,s-(q*t))
   where Euclid zero one (==)(+)(-)(*)(/) deg div=euclid
 
-gcd :: Dictionary d-> d->d->d 
 gcd euclid a b = d where (d,_,_)=eea euclid a b
+mcm euclid a b = fst$ _div euclid ((.*) euclid a b) (gcd euclid a b)
 
 pow :: Dictionary d->d->Integer->d
 pow ring a b=

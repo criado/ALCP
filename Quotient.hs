@@ -1,6 +1,7 @@
 module Quotient where
 
 #include "Header.hs"
+import Numbers
 
 mod::Dictionary d->d->Dictionary d
 mod euclid m=Field{ 
@@ -18,8 +19,6 @@ mod euclid m=Field{
   } where Euclid zero one (==)(+)(-)(*)(/) deg div=euclid
           reduce a=snd$div a m
 
---Los modulos deben ser primos dos a dos (no se comprueba)
---La solución es módulo el producto de todo
 chinese :: Dictionary d-> [(d,d)]->(d,d)
 chinese euclid= foldr1 chinese2
   where chinese2 (x1,y1) (x2,y2)= reduce
@@ -27,3 +26,16 @@ chinese euclid= foldr1 chinese2
            (x2*y1*(./) (euclid`mod`y2) one y1), y1*y2)
         Euclid zero one (==)(+)(-)(*)(/) deg div=euclid
         reduce (a,b)=(snd$ a `div`b,b)
+
+-- para euclid=integer, tengo uno a prueba de no-primos
+chineseInteger=chinese integer.chineseFilter.chineseSplit where 
+  chineseSplit::[(Integer,Integer)]->[[(Integer,Integer)]]
+  chineseSplit l= Ext.groupWith (fst.head.factor.snd)$ L.sort $ l>>=
+    (\(x,y)->[(snd$_div integer x $ pow integer b e,pow integer b e)
+              |(b,e)<-factor y]) 
+
+  chineseFilter::[[(Integer,Integer)]]->[(Integer,Integer)]
+  chineseFilter l= map filterPrime l where
+    filterPrime l=
+      assert(all (\(x',y')->snd(_div integer x y')P.==x') l) (x,y)
+      where (x,y)=last l
