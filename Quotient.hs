@@ -19,6 +19,8 @@ mod euclid m=Field{
   } where Euclid zero one (==)(+)(-)(*)(/) deg div=euclid
           reduce a=snd$div a m
 
+isUnit euclid m=_deg euclid m ==1
+
 chinese :: Dictionary d-> [(d,d)]->(d,d)
 chinese euclid= foldr1 chinese2
   where chinese2 (x1,y1) (x2,y2)= reduce

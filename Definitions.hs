@@ -3,6 +3,7 @@ module Definitions where
 import Prelude hiding(gcd,mod,(+),(-),(*),(/),div)
 import qualified Prelude   as P
 import qualified Data.List as L
+import Data.Maybe
 
 data Dictionary t=
   Field {_zero::t, _one::t, (.==)::t->t->Bool, (.+)::t->t->t,
@@ -39,7 +40,6 @@ mul ring a b=
   where (+)=(.+) ring; zero=_zero ring
         α=mul ring a (b`P.div`2)
 
-order :: Dictionary  t->t->Maybe Integer
-order ring elem=fmap(\i->1 P.+ toInteger i)$ L.findIndex(==one) $
-                 take 1000 $iterate(*elem)elem
+order :: Dictionary  t->t->Integer
+order ring elem=toInteger $ fromJust $ L.findIndex(==one) $ take 100000 $iterate(*elem)elem
   where (*)=(.*)ring; one=_one ring; (==)=(.==)ring

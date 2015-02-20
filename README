@@ -3,14 +3,14 @@
 [✗] algoritmo de adiccion y producto en base 2^64
 [✓] algoritmo para calcular el teorema chino del resto (i.e. calcular el inverso)
 [?] mcd en un D.F.U.
-[?] euclides modular
+[✓] euclides modular
 [✓] euclides en Z[i]
 [✓] inverso de un elemento en un cuerpo finito.
 [✓] test de irreducibilidad de un primo en Fq[x]
 [✓] logaritmo discreto en cuerpos Fq. ¿Algoritmo ρ-Pollard?
 [?] polinomio minimo de alpha+beta, alpha*beta, ... cuando Q(alpha), Q(beta) son extensiones de Q
-[✓✓?] algoritmo de factorización de un polinomio en cuerpo finito parte 1, 2 y 3.
-[ ] algoritmo de factorizacion de Berlekamp.
+[✓✓ ] algoritmo de factorización de un polinomio en cuerpo finito parte 1, 2 y 3.
+[✗] algoritmo de factorizacion de Berlekamp.
 [ ] algoritmo de Hensel.
 [ ] AKS
 [✓] Miller-Rabin (test de primalidad probabilista en el chuletario)

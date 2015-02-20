@@ -14,3 +14,4 @@ import Debug.Trace
 import GHC.Exts as Ext
 import System.Random
 import System.IO.Unsafe
+import Data.Ix

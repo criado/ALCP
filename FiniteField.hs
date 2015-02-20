@@ -18,7 +18,7 @@ enumPol p n=[1:q|q<-enumList p n]
 irred::Integer->[Integer]->Bool
 irred p f=
   zero == h n && 
-   all (\n_i-> one == gcd (pol field) f (h n_i) ) primedivs
+   all (isUnit (pol field).gcd (pol field) f.h )primedivs 
   where 
     n=_deg (pol field) f P.- 1 
     field@(Field _zero _one (.==)(.+)(.-)(.*)(./))=integer `mod` p

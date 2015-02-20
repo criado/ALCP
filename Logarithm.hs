@@ -9,30 +9,27 @@ logarithm::Show d=>Dictionary d->d->d->(Integer,Integer)
 logarithm field α β=
   chineseInteger$ [0..12] >>= (\u->logarithmEq field u α β)
 
-logarithmEq::Show d=>Dictionary d->Int->d->d->[(Integer,Integer)]
+logarithmEq::Show d=>Dictionary d->Integer->d->d->[(Integer,Integer)]
 logarithmEq field seed α β=
   end $ loop $ zip (iterate f (one,0,0)) (iterate (f.f) (one,0,0)) 
    
-  where f (x,a,b)
-          |opt P.==0 = (α*x, 1 P.+a,       b)
-          |opt P.==1 = (x*x, 2 P.*a, 2 P.* b) 
-          |opt P.==2 = (β*x,      a, 1 P.+ b)
-          where opt= hash seed x `P.mod` 3
-          
-        Field zero one (==)(+)(-)(*)(/)=field
-        n= fromJust $ order field α
+  where Field zero one (==)(+)(-)(*)(/)=field
+        n= order field α
 
+        f (x,a,b)| opt P.==0 = (α*x, 1 P.+a,       b)
+                 | opt P.==1 = (x*x, 2 P.*a, 2 P.* b) 
+                 | opt P.==2 = (β*x,      a, 1 P.+ b)
+                 where opt= hash seed x `P.mod` 3
+
+        loop= fromJust. L.find (\((x,_,_),(y,_,_))-> x==y).tail
+          
         end ((_,a,b),(_,a',b'))= 
           [((./) (integer`mod`n') a'' b'' ,n')| b'' /=zero]
-          where n' = fst $ n    `div` g
-                a''= fst $ a'-a `div` g
-                b''= fst $ b-b' `div` g
+          where n' = n     /g
+                a''= (a'-a)/g
+                b''= (b-b')/g
                 g=gcd integer (a'-a) $ gcd integer (b-b') n
                 Euclid zero one (==)(+)(-)(*)(/) deg div=integer
-                                 
-        loop= fromJust. L.find (\((x,_,_),(y,_,_))-> x==y).tail
 
-hash seed x=
-  pow (integer`mod`541) (toInteger$ seed+1) (tonum $show x) 
-  where tonum []=0
-        tonum (c:cs)= tonum cs * 256 + toInteger(ord c)
+hash seed x= pow (integer`mod`541) (seed+1) (tonum$show x) 
+             where tonum= foldr (\u v->v*256+toInteger(ord u)) 0 

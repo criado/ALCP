@@ -45,3 +45,12 @@ div::(Dictionary d->d)->(Dictionary d->d)->Dictionary d->(d,d)  ; div a b des=_d
 fact::(Dictionary d->d)->Dictionary d-> (d,[(d,Integer)])       ; fact a des=_factor des (a des)
 literal::d->Dictionary d->d                                     ; literal a des=a
 -}
+
+{- De Polynomials. 
+cyclotomic::Dictionary d->[d]
+cyclotomic field =
+  [foldr (\a b->fst $ _division (pol field) b a) (start n) (dividers n)| n<-[1..]]
+  where Field one zero (==) (+) (-) (*) (/)= field
+        start n=[one]++replicate (n P.- 1) zero++[zero-one]
+        dividers n=[cyclotomic field!!k|k<-[1..n-1], k `P.mod` n P.==0]
+ -}    

@@ -9,7 +9,8 @@ module Numbers where
  (.+)=(+),
  (.-)=(-),
  (.*)=(*),
- (./)= \n m->assert(m ==1||m == -1) n *m,
+ (./)= \n m->let (c,r)=_div 𝕫 n m
+             in assert (r==0) c,
  _deg= P.id,
  _div= \a b->(P.div a b, P.mod a b)
 }
