@@ -8,9 +8,9 @@
 [✓] inverso de un elemento en un cuerpo finito.
 [✓] test de irreducibilidad de un primo en Fq[x]
 [✓] logaritmo discreto en cuerpos Fq. ¿Algoritmo ρ-Pollard?
-[?] polinomio minimo de alpha+beta, alpha*beta, ... cuando Q(alpha), Q(beta) son extensiones de Q
+[✗] polinomio minimo de alpha+beta, alpha*beta, ... cuando Q(alpha), Q(beta) son extensiones de Q
 [✓✓✓] algoritmo de factorización de un polinomio en cuerpo finito parte 1, 2 y 3.
-[✗] algoritmo de factorizacion de Berlekamp.
+[?] algoritmo de factorizacion de Berlekamp.
 [ ] algoritmo de Hensel.
 [✓] AKS
 [✓] Miller-Rabin (test de primalidad probabilista en el chuletario)
