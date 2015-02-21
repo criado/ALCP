@@ -5,6 +5,8 @@ import Numbers
 import Quotient
 import Polynomials
 
+-- Tal y como se describe en "Primes in P"
+
 aks::Integer->Bool --isPrime
 aks n
   | ispow (fromInteger n)                               = False
@@ -24,4 +26,3 @@ aks n
                 zn=integer `mod` n
                 eucl@(Field zero one (==)(+)(-)(*)(/))= pol zn`mod`m
                 m=(.-) (pol zn) (pow (pol zn) x r) (_one (pol zn))
-

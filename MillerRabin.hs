@@ -8,7 +8,7 @@ import Utilities
 -- y a^(s*2^t) /= -1 mod n (para cualquier 0<=t<=r-1)
 -- entonces n es compuesto. A a se le llama testigo
 
-millerRabin::Integer->Int->Bool
+millerRabin::Integer->Integer->Bool
 millerRabin n k=
   all test $ take k $ map (getRandom n) [1..]
   where (s,r)=div2 (n-1)
@@ -17,8 +17,9 @@ millerRabin n k=
                             iterate (\a->(a*a)`P.mod`n) t_s
               where t_s  = (t^s) `P.mod` n
 
-        div2 n=if n`P.mod`2==0 then (n',s'+1) else (n,0)
-               where (n',s')=div2 (n`div`2)
+        div2 n| n`P.mod`2==0 = (n',s'+1) 
+              | otherwise= (n,0)
+              where (n',s')=div2 (n`div`2)
         getRandom n i =unsafePerformIO $ do
           g<-getStdGen; return $ randomRs (1,n-1) g !!i
 

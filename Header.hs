@@ -1,4 +1,4 @@
-import Prelude hiding ((!!),gcd,length,replicate,mod)
+import Prelude hiding ((!!),gcd,length,replicate,take,drop,mod)
 import qualified Prelude as P
 import Definitions
 import Utilities

@@ -32,7 +32,8 @@ pol field = Euclid _zero _one (.==)(.+)(.-)(.*)(./) _deg _div where
     where (c,r)    = divmonic (p.-(map (*head p) q++pad)) q 
           pad      = replicate (_deg p P.- _deg q) zero
 
-monic field p = map (\u->(./)field u (head p)) p
+monic field p = map (/head p) $ dropWhile (==zero) p
+                where Field zero one (==)(+)(-)(*)(/)= field
 
 derivate::Dictionary d->[d]->[d]
 derivate ring p= reduce[mul ring (p!!i) (l-i-1) |i<-[0,1..l-2] ]

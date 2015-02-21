@@ -7,6 +7,12 @@ length=toInteger. Prelude.length
 replicate::Integer->a->[a]
 replicate a= Prelude.replicate (fromInteger a)
 
+take::Integer->[a]->[a]
+take n= Prelude.take (fromInteger n)
+
+drop::Integer->[a]->[a]
+drop n= Prelude.drop (fromInteger n)
+
 (!!)::[a]->Integer->a
 a!!b=a Prelude.!! fromInteger b
 
@@ -32,5 +38,6 @@ primes  = 2:([3,5..] `minus` foldt [[p*p,p*p+2*p..]|p<-primes_])
 --Toma factorización cutre. Así se compensa una buena criba de primos.
 factor::Integer->[(Integer,Integer)]
 factor n=let l=[(p,maxexp n p)|p<-takeWhile (abs n>=) primes]
-             maxexp n p=if n`mod`p==0 then 1+maxexp(n`div`p)p else 0
+             maxexp n p|n`mod`p==0= 1+maxexp(n`div`p)p
+                       |otherwise = 0
          in filter ((/=0).snd) l

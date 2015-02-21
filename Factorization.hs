@@ -30,16 +30,15 @@ factorPol p n f=  (\u-> curry fact3 p n $ zip [1..] u)
 
 fact1::Integer->Integer->Pol->[Pol]
 fact1 p n f
-  | f' == zero  = map (stride p) $ fact1 p n (unstride p f)
+  | deg f P.<=1 = [f]
+  | f' == zero  = concat $ replicate p $ fact1 p n (unstride f)
   | deg g P.==1 = [f]
   | otherwise   = f2:fact1 p n g
   where f'= derivate (finite p n) f
-        g = gcd (pol(finite p n)) f f'
-        f2= f/g
+        g = monic(finite p n) $ gcd (pol(finite p n)) f f'
+        f2= (./) (pol$ finite p n) f g
+        unstride f=reverse[reverse f!!i| i<-[0,p..deg f]]
         Euclid zero one (==)(+)(-)(*)(/)deg div= pol(finite p n)
-        stride p= 
-          concatMap(\a->replicate(p P.-1)(_zero$finite p n)++[a])
-        unstride p f=reverse[reverse f!!i| i<-[0,p..deg f]]
 
 fact2::Integer->Integer->Pol->[(Pol,Integer)]
 fact2 p n f=
@@ -49,12 +48,38 @@ fact2 p n f=
         q= pow integer p n
         x= [_one field, _zero field]
         aux::Integer->Pol->Pol->[(Pol,Integer)]
-        aux d f xq | deg f P.==1= [(f,1)]
-                   | deg g P./=1= (g, d):aux (d P.+1) f' xq'
+        aux d f xq | deg f P.==1= []
+                   | deg g P./=1= (g, d):aux d f' xq
                    | otherwise  =        aux (d P.+1) f xq'
-                   where g  = gcd (pol field) f (xq-x)
+                   where g  = monic field$ gcd (pol field) f (xq-x)
                          xq'= pow (pol field `mod` f) xq q
                          f' = f/g
 
-fact3::Integer->Integer->Integer->Pol->[Pol]
-fact3 p n d f= error "ash"
+fact3::Integer->Integer->(Pol,Integer)->[Pol]
+fact3 p n (f,d)= assert(p P./= 2)$ trace (show (take 3 pols)) $
+  fact [f] pols
+  where fact factors pols
+          | length factors P.==r = factors
+          | otherwise = fact (concatMap split factors) pols'
+          where (h:pols')= pols
+                g=pow (euclid`mod`f) h exp-one
+                  where Field zero one (==)(+)(-)(*)(/)=euclid`mod`f
+                exp=(p P.^(n P.*d) P.-1) `P.div` 2
+                split f| deg f P.==d = [f]
+                       | m==one   = [f]
+                       | m==f     = [f]
+                       | otherwise= [f/m,m]
+                       where m=monic(finite p n)$ gcd euclid f g
+        euclid@(Euclid zero one(==)(+)(-)(*)(/)deg div)=pol$finite p n
+
+        l=deg f P.- 1
+        r=l `P.div` d
+
+        pols::[Pol]
+        pols= filter (/=zero)$ 
+          map (take l) $ iterate (drop l ) 
+            $ map(take n)$ iterate (drop n)$ map (getRandom p) [1..]
+        getRandom::Integer->Integer->Integer
+        getRandom n i =unsafePerformIO $ do
+          g<-getStdGen; return $ randomRs (0,n P.-1) g !!i
+
