@@ -2,6 +2,9 @@ module Polynomials where
 #include "Header.hs"
 
 pol::Dictionary d->Dictionary [d]
+pol (Euclid zero one(==)(+)(-)(*)(/)deg div)=
+  pol (Field zero one(==)(+)(-)(*)(/))
+
 pol field = Euclid _zero _one (.==)(.+)(.-)(.*)(./) _deg _div where
   Field zero one (==) (+) (-) (*) (/) = field 
 

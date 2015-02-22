@@ -18,19 +18,8 @@ irred p n f= --Test de irreducibilidad (Rabin) en 𝔽q, q=p^n, p primo
     h n_i=pow (pol field`mod`f) x (pow integer p (n_i P.* n) ) - x
     x=[_one,_zero] --polinomio x
     primedivs=[d `P.div` p_i| p_i<-(fst.unzip.factor) d]
-{-
-factorPol::Integer->Integer->Pol->[Pol]
-factorPol p n f= fact1 p n f >>=
-                 (L.transpose.fact2 p n.monic(finite p n)) >>=
-                 fact3 p n.monic(finite p n)
 
-factorPol p n f=  (\u-> curry fact3 p n $ zip [1..] u)
-                 $ L.Transpose $ map (fact1 p n) $ fact1 p n f
--}
-
-fact p n f= fact1 p n f>>=
-            fact2 p n  >>=
-            fact3 p n 
+factorPol p n f= fact1 p n f >>= fact2 p n >>= fact3 p n
 
 fact1::Integer->Integer->Pol->[Pol]
 fact1 p n f
@@ -46,20 +35,19 @@ fact1 p n f
 
 fact2::Integer->Integer->Pol->[(Pol,Integer)]
 fact2 p n f=
-  aux 1 f (pow (pol field`mod`f) x q)
+  aux 1 f (pow (pol field`mod`f) [[1],[0]]  (p^n))
   where Euclid zero one (==)(+)(-)(*)(/) deg div= pol field
         field= finite p n
-        q= pow integer p n
-        x= [_one field, _zero field]
-        aux d f xq | deg f P.==1= []
-                   | deg g P./=1= (g, d):aux d f' xq
-                   | otherwise  =        aux (d P.+1) f xq'
-                   where g  = monic field$ gcd (pol field) f (xq-x)
-                         xq'= pow (pol field `mod` f) xq q
-                         f' = f/g
+        aux d f xq 
+          | deg f P.==1= []
+          | deg g P./=1= (g, d):aux d f' xq
+          | otherwise  =        aux (d P.+1) f xq'
+          where g  = monic field$ gcd (pol field) f (xq-[[1],[0]])
+                xq'= pow (pol field `mod` f) xq (p^n)
+                f' = f/g
 
 fact3::Integer->Integer->(Pol,Integer)->[Pol]
-fact3 p n (f,d)= assert(p P./= 2)$ fact [f] pols
+fact3 p n (f,d)= assert(p P./= 2) $ fact [f] pols
   where euclid@(Euclid zero one(==)(+)(-)(*)(/)deg div)=pol$finite p n
 
         fact factors pols
@@ -67,17 +55,14 @@ fact3 p n (f,d)= assert(p P./= 2)$ fact [f] pols
           | otherwise = fact (concatMap split factors) pols'
           where (h:pols')= pols
                 g=pow (euclid`mod`f) h exp-one
-                  where Field zero one (==)(+)(-)(*)(/)=euclid`mod`f
                 exp=(p P.^(n P.*d) P.-1) `P.div` 2
                 split f| m==one || m==f = [f]
                        | otherwise      = [f/m,m]
                        where m=monic(finite p n)$ gcd euclid f g
 
-        l=deg f P.- 1
-        r=l `P.div` d
+        l=deg f P.- 1; r=l `P.div` d
 
         pols= filter (/=zero)$ map (take l) $ iterate (drop l) 
           $map(take n)$ iterate (drop n)$ map (getRandom p) [1..]
         getRandom n i =unsafePerformIO $ do
           g<-getStdGen; return $ randomRs (0,n P.-1) g !!i
-

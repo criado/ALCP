@@ -13,7 +13,7 @@ fract euclid=Field{
   (.==)= \(a,b) (c,d)->       (a*d)==(b*c),
   (./) = \(a,b) (c,d)->reduce (a*d,b*c)
  } where Euclid zero one (==)(+)(-)(*)(/) deg div =euclid
-         reduce (a,b)=(fst$ a`div`d, fst$ b`div`d)
+         reduce (a,b)=(a/d, b/d)
                       where d=gcd euclid a b
 
 𝕢=fract 𝕫; rational=𝕢
