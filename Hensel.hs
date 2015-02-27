@@ -19,15 +19,15 @@ primeMod f= const 7 $
                     gcd (pol(integer`mod`p)) f f'
                 (==)=(.==) (pol(integer`mod`p))
 
---Paso 3: devuelve el módulo que debe sobrepasar Hensel
+--Paso 3: devuelve el N que debe sobrepasar Hensel
 mignotteBound::Integer->[Integer]->Integer
 mignotteBound p f=
-  ceiling bound
+  ceiling $ logBase (fromInteger p)  bound
   where norm= sqrt$ sum$ map(\a->fromInteger (a*a)) f
         bound= 2.0^length f*norm
 
 --Paso 4: devuelve, en el mismo formato, el hensel Lift, de n a n^2
-henselLift n (f,g,h,s,t)= trace ("\nHensel: "++show n++" "++show f++" "++show g++" "++show h++" "++show s++" "++show t++"\n"++"\nHensel: "++show n++" "++show f++" "++show g'++" "++show h'++" "++show s'++" "++show t'++"\n")  $
+henselLift n (f,g,h,s,t)= --trace ("\nHensel: "++show n++" "++show f++" "++show g++" "++show h++" "++show s++" "++show t++"\n"++"\nHensel: "++show n++" "++show f++" "++show g'++" "++show h'++" "++show s'++" "++show t'++"\n")  $
   assert ((.==) (pol(integer`mod`n)) f (g'*h')) $ 
   assert ((.==) (pol(integer`mod`n)) one ((s'*g')+(t'*h'))) $
   assert (f==(g'*h')) $ 
@@ -42,42 +42,52 @@ henselLift n (f,g,h,s,t)= trace ("\nHensel: "++show n++" "++show f++" "++show g+
 
         Euclid zero one(==)(+)(-)(*)(/) deg div=pol (integer`mod`(n P.*n))
 
+liftTo p pN (f,g,h,s,t)
+  | p>=pN  = (f,g,h,s,t)
+  | otherwise = liftTo (p*p) pN $ henselLift p (f,g,h,s,t)
+
+products m []=[([1],[1])]
+products m (x:xs)=
+  [(trueRepr m $a*c, trueRepr m $ b*d)
+   |(a,b)<-[(one,x),(x,one)],(c,d)<-products m xs]
+  where Euclid zero one(==)(+)(-)(*)(/)deg div=pol$(integer`mod`m)
+
 --Paso 5: recombina los factores como buenamente puede
-{-
-recombine::Integer->[Integer]->[[Integer]]->[[Integer]]
-recombine n f dividers
-  | null dividers = [f]
-  | otherwise = 
-  where l=head f
--}
+recombine::[Integer]->Integer->[[Integer]]->[[Integer]]
+recombine f m factors=
+  [real_divs!!(2^i) 
+   |i<-[0.. ceiling(logBase 2 $ fromInteger$ length real_divs)P.-1]]
+  where real_divs=concatMap (\(a,b)->[a|(a*b)==f]) divs
+        divs=products m factors
+        Euclid zero one(==)(+)(-)(*)(/)deg div=pol$integer
   
 --Devuelve los coeficientes al representante mas cercano a 0
 trueRepr n= map (\a-> if a<=(n`div`2) then a else a-n)
 
---Da la factorización elevada factorizacion hasta p^N
 factorPolInt::[Integer]->[[Integer]]
-factorPolInt f= trace ("factors: "++show factors++"\nElevados: "++show (liftaux p(zipWith prep factors(products factors)))) $
-  map (trueRepr (49 P.*49)) $ tail $ dividers $ liftaux p (zipWith prep factors (products factors) )
+factorPolInt f=
+  recombine f pN lifted
+  where p=primeMod f
+        n=mignotteBound p f
+        pN=p^n
+        
+        factors=map(map to_zp) $factorPol p 1(monic fp (map (:[]) f))
+                where to_zp []= 0; to_zp [a]=a
+                      fp=finite p 1
+      
+        lifted::[[Integer]]
+        lifted=map (trueRepr pN) $ liftTo p pN f factors
 
-  where --factors=map(map to_zp) $factorPol p 1(monic fp (map (:[]) f))
-        --        where to_zp []= 0
-        --              to_zp (a:_)=a
-        factors=[[1,0,1,1],[1,3,0 P.-2],[1,0 P.-3,0 P.-2]]
-
-        fp=finite p 1
-
-        products [_]= [one]
-        products (a:as)= let bs=products as in (head as*head bs:bs)
-
-        prep::[Integer]->[Integer]->([Integer],[Integer],[Integer],[Integer],[Integer])
-        prep g h=(trueRepr p (g*h), g, h, s/d, t/d) where (d,s,t)= eea euclid g h
- 
-        euclid@(Euclid zero one(==)(+)(-)(*)(/)deg div)=pol(integer`mod`p)
-        liftaux n x| n>mign  = map (\(_,g,_,_,_)->g) x
-                   | otherwise = liftaux (n P.*n) $ map (henselLift n) x
-        mign=mignotteBound p f
-        p=primeMod f
-
-        dividers []=[one]
-        dividers (x:xs)= [(.*) (pol(integer`mod`(49 P.*49)))x ys| x<-[[1],x], ys<-dividers xs]
-                          
+        liftTo m pN f factors
+          | m>=pN = factors
+          | otherwise = liftTo (m*m) pN f $ liftallStep m f factors
+        
+        liftallStep::Integer->[Integer]->[[Integer]]->[[Integer]]
+        liftallStep m f [] = []
+        liftallStep m f (g:gs)=
+          g':liftallStep m h' gs
+          where (d,s,t)= eea(pol$ integer`mod`m) g h
+                (_,g',h',_,_)=henselLift m (f,g,h,s/d,t/d)
+                (/)=(./) (pol$ integer`mod`m)
+                h=foldr ((.*) (pol$ integer`mod`m)) 
+                   (_one (pol$ integer`mod`m)) gs
