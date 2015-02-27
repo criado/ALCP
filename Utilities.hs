@@ -16,8 +16,7 @@ drop n= Prelude.drop (fromInteger n)
 (!!)::[a]->Integer->a
 a!!b=a Prelude.!! fromInteger b
 
--- Cálculo de primo. Rápido en la práctica, pero O(n^1.2)
--- www.haskell.org/haskellwiki/Prime_Numbers#Tree_merging
+-- Cálculo de primo. Rápido en la práctica, pero O(n**1.2)
 primes::[Integer]
 primes  = 2:([3,5..] `minus` foldt [[p*p,p*p+2*p..]|p<-primes_])
   where

@@ -5,8 +5,8 @@ import Polynomials
 import Numbers
 
 finite p n=assert (LO.member p primes) $
-            pol(𝕫 `mod` p)`mod`(head$filter(irred p)
-             $enumPol p n)
+            pol zp `mod`(head$filter(irred p) $enumPol p n)
+           where zp= integer`mod`p
 
 enumList p 1=[[c]|c<-[0..p P.-1]]
 enumList p n=[c:q|c<-[0..p P.-1],q<-enumList p (n P.-1)]

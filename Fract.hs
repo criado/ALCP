@@ -15,5 +15,3 @@ fract euclid=Field{
  } where Euclid zero one (==)(+)(-)(*)(/) deg div =euclid
          reduce (a,b)=(a/d, b/d)
                       where d=gcd euclid a b
-
-𝕢=fract 𝕫; rational=𝕢

@@ -1,0 +1,223 @@
+\documentclass[12pt, a5paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\parindent 0in
+\usepackage[spanish]{babel}
+\setlength{\parskip}{0.5\baselineskip}
+\usepackage{multirow}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage[twoside, margin=0.3in, bottom=0in, inner=0.5in, includefoot,heightrounded]{geometry}
+\usepackage{multicol}
+
+\fancyhf{} % clear all header and footers
+\renewcommand{\headrulewidth}{0pt} % remove the header rule
+\renewcommand{\footrulewidth}{0pt}
+\setlength\footskip{10pt}
+\fancyfoot[LO, RE]{\thepage}
+
+\setlength{\columnsep}{0.3in}
+
+\newtheorem*{teo}{\emph{$T^a$}}
+\newtheorem*{prop}{Prop}
+
+\theoremstyle{definition}
+\newtheorem*{ejem}{Ejemplo}
+\newtheorem*{defi}{Def}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{
+  columns=fullflexible,
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\ttfamily\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  %deletekeywords={...},            % if you want to delete keywords from the given language
+  inputencoding=utf8,
+  %escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  literate= {á}{{\'a}}1 {α}{{$\alpha$}}1 {β}{{$\beta$}}1 {é}{{\'e}}1 
+      {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1
+			{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+      {Ñ}{{\~N}}1 {δ}{{$\delta$}}1 {ε}{{$\epsilon$}}1
+			{_}{{\_}}1 {^}{{\textasciicircum}}1,
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=haskell,                 % the language of the code
+  morekeywords={ll,ii,vi,vii,vvi,vll,mii,ld,point,vect,line,circle,polygon},
+            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=4,                       % sets default tabsize to 2 spaces
+  %title=\lstname,                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+  texcl=true
+}
+
+\pagestyle{fancy}
+
+\begin{document}
+\input{portada.tex}
+\pagenumbering{gobble}
+\pagenumbering{arabic}
+\tableofcontents
+\newpage
+%\section{DPletario}
+%\lstinputlisting[firstline=10]{dpletario.cpp}
+%\newpage
+\section{Introducción}
+El objetivo de este documento es complementar mi práctica de ALCP.
+Esto es así porque no me gusta poner comentarios excesivos en mi
+código, así que prefiero dejar las explicaciones a parte.
+
+He hecho la práctica en Haskell, porque es un paradigma de
+programación mucho más cercano a los algoritmos que debemos
+implementar. Esto permite en algunos puntos un código muy limpio.
+
+A cambio, ha sido un poco engorroso tener que pasar
+explícitamente las estructuras algebraicas sobre las que se trabaja
+cada vez.
+
+\newpage
+
+\section{Definitions}
+El primer módulo relevante es Definitions. Aquí se definen las
+estructuras y algunos algoritmos básicos que se usarán en toda la
+práctica.
+
+En primer lugar, defino una estructura Dictionary, que contiene las
+operaciones de cada estructura algebraica. He definido cuerpos,
+dominios Euclídeos y dominios de factorización única. Para los
+dominios euclídeos está definida una división que sólo se garantiza
+que funciona al dividir por una unidad (O sea, cuando el grado es 1).
+
+En este módulo también está el primer algoritmo importante: el
+algoritmo de Euclides extendido. Es importante que está definido para
+cualquier dominio Euclídeo. También hay algunos algoritmos similares
+derivados.
+
+También en Definitions está la exponenciación rápida en cualquier
+anillo, y una pequeña función para calcular el orden de un elemento de
+cualquier anillo.
+\newpage\lstinputlisting[firstline=7]{../Definitions.hs}\newpage
+
+\section{Utilities}
+Utilities tiene funciones de ``fontanería'' de Haskell que he
+preferido redefinir.
+
+También tiene una criba de Eratóstenes muy refinada, (Utilizando
+rotaciones y filtros sucesivos, junto con la evaluación perezosa).
+Usando esta criba, he implementado un pequeño algoritmo de
+factorización de enteros.
+\newpage\lstinputlisting[firstline=1]{../Utilities.hs}\newpage
+
+\section{Numbers y Fract}
+Los dos primeros son  módulos sencillos que no requieren mucha explicación.
+Uno representa a los enteros (de precisión arbitraria) como dominio
+euclídeo. Otro representa el cuerpo de fracciones asociado a un
+dominio euclídeo.
+
+En cuanto a Gauss, representa a los enteros de Gauss como dominio
+euclídeo, usando como grado la norma euclídea. Para la división, hago
+la división de los complejos usual y busco de las cuatro opciones
+resultantes de sumar o no una unidad a cada coordenada, la que está
+mas cerca.
+
+Esto automáticamente resuelve el EEA para los enteros de Gauss. Es la
+ventaja de la modularidad de mi práctica.
+
+\newpage\lstinputlisting[firstline=5]{../Numbers.hs}
+\lstinputlisting[firstline=6]{../Fract.hs}
+\lstinputlisting[firstline=7]{../Gauss.hs}
+
+\newpage
+
+\section{Quotient}
+Quotient define la operación de tomar el módulo de un dominio euclídeo
+por un ideal generado por un elemento. Las operaciones son simplemente
+tomar restos tras cualquier operación. Para la inversa, se aplica el
+EEA para calcular el t válido. Es muy importante que esta versión
+puede calcular divisiones cuando estas son posibles. Para ello,
+manipulo un poco los resultados que da el EEA para que se resuelva la
+ecuación en general.
+
+Este módulo en particular es lo que hará falta más adelante para definir los
+cuerpos finitos. En este caso, se toma $\mathbb{F}_p[x]/<f>$ donde f es un polinomio
+irreducible. 
+
+También se define un resoluto del Teorema del resto chino. Éste
+funciona en cualquier dominio euclídeo cuando los módulos son primos
+entre sí.
+
+He implementado, para el caso de los enteros, un resolutor que permite
+sistemas en que los módulos no son primos entre sí. Para esto, 
+chineseSplit factoriza los módulos, descompone cada ecuación en un
+conjunto de ecuaciones de módulo potencia de un primo. Luego,
+chineseFilter elimina las ecuaciones redundantes comprobando que son
+coherentes. Por último, se resuelve el sistema con el resolutor
+general.
+
+El motivo por el que implemento este resolutor es para resolver más
+adelante el logaritmo discreto por Pollard-rho.
+
+\newpage\lstinputlisting[firstline=6]{../Quotient.hs}\newpage
+
+\section{Polynomials}
+Polynomials es, obviamente, uno de los módulos más básicos de la
+práctica. Genera el domino euclídeo de polinomios asociado a un
+cuerpo. También está definido para dominios euclídeos, para poder más
+adelante implementar la factorización en $\mathbb{Z}$.
+
+Básicamente se implementan las operaciones con los algoritmos
+elementales. Los polinomios se modelizan como listas de coeficientes,
+de mayor a menor grado. 
+
+Un detalle relevante es que para los polinomios, la función deg
+devuelve una unidad menos que el grado del polinomio. Esto es porque
+el grado como dominio euclídeo es diferente al grado del polinomio.
+Para mantener la práctica coherente con los algoritmos, aquí el grado
+es el grado euclídeo.
+
+También se implementan algunas funciones que serán útiles más
+adelante, como puede ser la reducción de un polinomio a su equivalente
+mónico o la derivada.
+
+\newpage\lstinputlisting{../Polynomials.hs}\newpage
+
+
+\clearpage
+\null
+\pagenumbering{gobble}
+\clearpage
+\begin{table}
+\centering
+\begin{tabular}{c}
+\emph{Alejandro Aguirre Galindo} \\
+\emph{Luis María Costero Valero} \\
+\emph{Jesús Doménech Arellano} \\
+\end{tabular}
+\end{table}
+\end{document}

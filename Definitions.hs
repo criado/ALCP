@@ -1,5 +1,4 @@
 module Definitions where
---infix 0 ^-^  --aquí no cabe nada más
 import Prelude hiding(gcd,mod,(+),(-),(*),(/),div)
 import qualified Prelude   as P
 import qualified Data.List as L
