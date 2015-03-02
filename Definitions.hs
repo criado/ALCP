@@ -40,5 +40,6 @@ mul ring a b=
         α=mul ring a (b`P.div`2)
 
 order :: Dictionary  t->t->Integer
-order ring elem=toInteger $ fromJust $ L.findIndex(==one) $ take 100000 $iterate(*elem)elem
+order ring elem=1 P.+(toInteger $ fromJust $ L.findIndex(==one) 
+    $ take 100000 $iterate(*elem)elem)
   where (*)=(.*)ring; one=_one ring; (==)=(.==)ring

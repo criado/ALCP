@@ -3,13 +3,13 @@ module MillerRabin where
 
 import Utilities
 
--- (n-1)=s*2^r
--- Si a^s /= 1 mod n
--- y a^(s*2^t) /= -1 mod n (para cualquier 0<=t<=r-1)
+-- (n-1)=s*2\^r
+-- Si a\^s /= 1 mod n
+-- y a\^(s*2\^t) /= -1 mod n (para cualquier 0<=t<=r-1)
 -- entonces n es compuesto. A a se le llama testigo
 
 millerRabin::Integer->Integer->Bool
-millerRabin n k=
+millerRabin k n=
   all test $ take k $ map (getRandom n) [1..]
   where (s,r)=div2 (n-1)
         test t| t_s==1   = True
@@ -23,4 +23,4 @@ millerRabin n k=
         getRandom n i =unsafePerformIO $ do
           g<-getStdGen; return $ randomRs (1,n-1) g !!i
 
--- (take 30 $ filter (\n->millerRabin n 30) [2..])
+-- (take 30 ( filter (millerRabin 30) [2..]))

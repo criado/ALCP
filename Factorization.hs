@@ -8,7 +8,7 @@ import FiniteField
 type Pol=[[Integer]]
 
 irred::Integer->Integer->Pol->Bool
-irred p n f= --Test de irreducibilidad (Rabin) en 𝔽q, q=p^n, p primo
+irred p n f= --Test de irreducibilidad (Rabin) en Fq, q=p**n, p primo
   zero == h d && 
    all (isUnit (pol field).gcd (pol field) f.h) primedivs
   where 

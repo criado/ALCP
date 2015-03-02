@@ -10,7 +10,7 @@ import Utilities
 
 --Paso 1
 primeMod::[Integer]->Integer
-primeMod f= const 7 $
+primeMod f= 
   fromJust$ L.find (test f) primes
   where test f p=
           (head f`P.mod`p P./=0) && (f'/=[]) && (m==[1])
@@ -26,8 +26,8 @@ mignotteBound p f=
   where norm= sqrt$ sum$ map(\a->fromInteger (a*a)) f
         bound= 2.0^length f*norm
 
---Paso 4: devuelve, en el mismo formato, el hensel Lift, de n a n^2
-henselLift n (f,g,h,s,t)= --trace ("\nHensel: "++show n++" "++show f++" "++show g++" "++show h++" "++show s++" "++show t++"\n"++"\nHensel: "++show n++" "++show f++" "++show g'++" "++show h'++" "++show s'++" "++show t'++"\n")  $
+--Paso 4: devuelve, en el mismo formato, el hensel Lift, de n a n\^2
+henselLift n (f,g,h,s,t)=
   assert ((.==) (pol(integer`mod`n)) f (g'*h')) $ 
   assert ((.==) (pol(integer`mod`n)) one ((s'*g')+(t'*h'))) $
   assert (f==(g'*h')) $ 
